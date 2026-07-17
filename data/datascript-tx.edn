@@ -1,0 +1,25 @@
+;; data/datascript-tx.edn — DataScript tx-data derived from src/association/facts.cljc
+;; `association.facts/catalog` (ADR-2607141700 Wave 0). Same shape as sibling files.
+
+[#:association-rule{:id "spcr.founding-1990"
+                     :title "Svaz průmyslu České republiky founded in Ostrava on the initiative of 153 companies and organizations (Czech Wikipedia, corroborated by Wikidata Q12057458 inception statement)"
+                     :association "spcr"
+                     :isic "9411"
+                     :country "CZE"
+                     :kind :governance-program
+                     :url "https://cs.wikipedia.org/wiki/Svaz_pr%C5%AFmyslu_a_dopravy_%C4%8CR"
+                     :url-provenance :wikipedia-corroborated
+                     :established-date "1990-05-05"
+                     :retrieved-at "2026-07-17"
+                     :topic [:governance]}
+ #:association-rule{:id "spcr.renaming-1994-add-transport"
+                     :title "General assembly approved renaming to Svaz průmyslu a dopravy České republiky (Confederation of Industry AND TRANSPORT), expanding scope (Czech Wikipedia)"
+                     :association "spcr"
+                     :isic "9411"
+                     :country "CZE"
+                     :kind :governance-program
+                     :url "https://cs.wikipedia.org/wiki/Svaz_pr%C5%AFmyslu_a_dopravy_%C4%8CR"
+                     :url-provenance :wikipedia-corroborated
+                     :established-date "1994-03-17"
+                     :retrieved-at "2026-07-17"
+                     :topic [:governance]}]

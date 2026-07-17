@@ -1,0 +1,11 @@
+;; Real-world organization identity/contact.
+;; :head-role is institutional title only -- no personal names.
+{:name-en "Confederation of Industry of the Czech Republic (Svaz průmyslu a dopravy ČR, SP ČR)"
+ :abbreviation "SP ČR"
+ :official-url "https://www.spcr.cz/"
+ :wikidata "Q12057458"
+ :isic "9411"
+ :country "CZE"
+ :established-date "1990-05-05"
+ :head-role-note "institutional office title only (President); personal names of current/former office-holders incidentally encountered but never persisted here"
+ :sourced-from "verified directly (WebFetch) 2026-07-17 -- spcr.cz's own 'o-nas'/'about-us' pages render successfully but do not surface founding-history text on those specific subpages. cs.wikipedia.org's own article, directly read, states verbatim: '5. května 1990, kdy byl v Ostravě z iniciativy 153 podniků a organizací založen Svaz průmyslu České republiky' and 'Dne 17. března 1994 schválila valná hromada přejmenování na Svaz průmyslu a dopravy České republiky'. The 1990 date is independently corroborated by Wikidata Q12057458's own 'inception' statement, read directly."}
