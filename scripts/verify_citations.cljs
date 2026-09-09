@@ -36,7 +36,7 @@
 
 (ns verify-citations
   (:require ["fs" :as fs]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [cljs.reader :as reader]))
 
 (def ^:private tx-path "data/datascript-tx.edn")

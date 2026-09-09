@@ -23,7 +23,7 @@
   hermetic on purpose. `nbb scripts/verify_citations.cljs` is the check that
   goes and looks."
   (:require [clojure.edn :as edn]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is testing]]
             [association.facts :as facts]))
 
