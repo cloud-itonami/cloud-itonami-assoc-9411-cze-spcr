@@ -16,22 +16,64 @@ professional membership organizations), alongside
 family (ADR-2607141700, `cloud-itonami-compliance-fact-federation`,
 in `com-junkawasaki/root`).
 
-## Sourcing note
+## Sourcing
 
-This repo fills the Czech Republic's previously-open association-axis
-gap (noted honestly at tick 139). The Czech Republic now has real,
-individually verified facts across all three axes: country
-([`cloud-itonami-iso3166-cze`](https://github.com/cloud-itonami/cloud-itonami-iso3166-cze)),
-municipality
-([`cloud-itonami-municipality-cze-prague`](https://github.com/cloud-itonami/cloud-itonami-municipality-cze-prague)),
-and association (this repo).
+The catalog began (2026-07-17) with two history entries taken from
+`cs.wikipedia.org`, corroborated by Wikidata (Q12057458), because
+`spcr.cz`'s own "o-nas"/"about-us" subpages were read at the time and
+did not surface founding-history text. That was honest about its
+sourcing and weak as a citation.
 
-`spcr.cz`'s own "o-nas"/"about-us" pages render successfully (unlike
-several other Czech official domains encountered this session) but do
-not surface founding-history text on those specific subpages — both
-entries here were instead directly WebFetch-verified against
-`cs.wikipedia.org`'s own article, independently corroborated by
-Wikidata (Q12057458)'s own "inception" statement for the 1990 date.
+On **2026-09-09** the confederation's own document register at
+<https://www.spcr.cz/dokumenty-sp-cr> was read and **twelve entries
+were added from documents fetched from `spcr.cz` itself**. Every date
+is quoted from the document's own text rather than from a description
+of it — the Statutes' Article 19 ("Tyto Stanovy byly schváleny valnou
+hromadou Svazu dne 13. května 2026. Mění a nahrazují Stanovy Svazu
+přijaté valnou hromadou konanou dne 15. června 2021."), the Code of
+Ethics' closing line ("schválila valná hromada dne 15. června 2021"),
+the Payment Rules' own header ("SCHVÁLENÝ VALNOU HROMADOU DNE
+13. 5. 2026 A ÚČINNÝ OD 14. 5. 2026"), and so on.
+
+The two Wikipedia entries are **kept**: the 1990 founding date is not
+stated in any of the primary documents found, so replacing them would
+lose a fact and deleting them would claim the confederation has no
+recorded founding. `:association-rule/url-provenance` is what tells
+the two kinds apart, and the test suite asserts the keyword matches
+the host the URL is actually on.
+
+### Checking the citations
+
+The suite is hermetic, so it cannot know whether a URL still resolves:
+
+```
+nbb scripts/verify_citations.cljs     # 0 all ok / 1 something rotted / 2 REFUSED
+```
+
+It fetches each **distinct** URL once (four entries cite four articles
+of the same Statutes PDF) and compares the response against the
+`:association-rule/media-type` the catalog records.
+
+That field is not decoration. **`spcr.cz` serves PDFs from
+extension-less paths** — `https://www.spcr.cz/stanovy-2026` is a 233 KB
+PDF — so a checker that infers the type from the URL would expect HTML
+for most of this catalog and pass whatever came back. Recording it per
+entry is also what separates "the PDF is still there" from "the PDF
+became a landing page saying it moved".
+
+A 404 here is a real 404: `spcr.cz` was probed on 2026-09-09 with six
+plausible-but-invented paths (`/stanovy-2025`, `/stanovy-2027`,
+`/platebni-rad-2026-05-15`, `/images/Eticky_kodex_SPCR_2020.pdf`,
+`/media/99999`, `/no-such-page-xyz`) and answered 404 to all six. It
+does not soft-404.
+
+Link rot is the expected failure and is not automatically a bug here:
+SP ČR renumbers `/media/NNNNN` when it reissues a document, and the
+year-stamped paths change when the general assembly approves a new
+text. A non-2xx means go to <https://www.spcr.cz/dokumenty-sp-cr> and
+find where the document went — it does not mean delete the entry, and
+it never means substitute a URL that was not read off an `spcr.cz`
+page.
 
 ## Scope
 
@@ -44,17 +86,31 @@ fabricate one.
 
 ## Data
 
-- `src/association/facts.cljc` — the catalog, source of truth.
-- `schema/association-rule.edn` — DataScript schema.
-- `data/datascript-tx.edn` — derived DataScript tx-data (query this
-  alongside other `cloud-itonami`/`etzhayyim` compliance-fact sources via
-  `com-junkawasaki/root`'s `scripts/compliance-fact-query.cljs`).
+- `data/datascript-tx.edn` — **the source**. The other two readings are
+  derived from it.
+- `src/association/facts.cljc` — the catalog as a map;
+  `association.facts-test` asserts it agrees with the data file field
+  for field.
+- `src/association_facts.kotoba` — **generated**; do not edit by hand.
 
-Both entries directly WebFetch-verified against `cs.wikipedia.org`'s
-own article: the 5 May 1990 founding of Svaz průmyslu České republiky
-in Ostrava (153 founding companies/organizations), and the 17 March
-1994 general-assembly renaming to Svaz průmyslu a dopravy České
-republiky (adding transport to its scope).
+```
+nbb scripts/gen_association_facts_kotoba.cljs           # write
+nbb scripts/gen_association_facts_kotoba.cljs --check   # exit 1 if stale
+```
+
+- `schema/association-rule.edn` — DataScript schema. Query this
+  alongside other `cloud-itonami`/`etzhayyim` compliance-fact sources
+  via `com-junkawasaki/root`'s `scripts/compliance-fact-query.cljs`.
+
+Several entries share a URL: Articles 1(2), 2(2)(a), 9 and 19 of the
+Statutes are four distinct rules inside one PDF. Ids are unique; URLs
+are not, and the suite asserts the weaker true thing — that no
+(url, title) pair repeats, and that the catalog reaches at least ten
+distinct documents.
+
+One entry carries **no** `:established-date` on purpose:
+`spcr.cz` gives the predecessor's founding year (1918) and no day, and
+a completed date would be indistinguishable from a fact.
 
 ## License
 

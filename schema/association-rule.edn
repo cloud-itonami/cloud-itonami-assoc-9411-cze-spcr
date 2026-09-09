@@ -11,6 +11,7 @@
  :association-rule/kind {:db/index true}
  :association-rule/url {}
  :association-rule/url-provenance {:db/index true}
+ :association-rule/media-type {:db/index true}
  :association-rule/established-date {}
  :association-rule/last-revised-date {}
  :association-rule/retrieved-at {}

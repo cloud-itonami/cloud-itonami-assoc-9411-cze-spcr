@@ -1,16 +1,19 @@
-;; The SPCR source catalog, as Kotoba.
+;; The SP ČR source catalog, as Kotoba.
 ;;
-;; GENERATED from data/datascript-tx.edn, which src/association/facts.cljc
-;; reads as data. Both are the same catalog; this one reaches the Kotoba
-;; oracle, wasm and both native ISAs, which the .cljc cannot.
+;; GENERATED from data/datascript-tx.edn by
+;; scripts/gen_association_facts_kotoba.cljs -- do not edit by hand; edit the
+;; data file and regenerate. `src/association/facts.cljc` holds the same
+;; catalog, and association.facts-test asserts the two agree, so the data
+;; file is the one source all three readings come from. This one reaches the
+;; Kotoba oracle, wasm and both native ISAs, which the .cljc cannot.
 ;;
-;; `:topic` is a SET in the source. A set has no order and `topic` is
-;; indexed by position, so the generator uses the order the data file
-;; writes. `by-topic-id` answers by name and is unaffected.
+;; `:topic` is a SET in the .cljc. A set has no order and `topic` is indexed
+;; by position, so the generator uses the order the data file writes.
+;; `by-topic-id` answers by name and is unaffected.
 ;;
-;; Parity: test/association_facts_kotoba_parity_test.clj compares every
-;; field of every entry against the .cljc, so this file cannot drift from
-;; the data without the suite saying so.
+;; Parity: test/association_facts_kotoba_parity_test.clj compares every field
+;; of every entry against the .cljc, so this file cannot drift from the data
+;; without the suite saying so.
 
 (ns association-facts
   (:export [main association-covered? entry-count entry-field topic-count
@@ -18,14 +21,15 @@
 
 (defn association-covered? [a :string] :bool (string=? a "spcr"))
 
-(defn entry-count [a :string] :i64 (if (association-covered? a) 2 0))
+(defn entry-count [a :string] :i64 (if (association-covered? a) 14 0))
 
 (defn valid-entry? [a :string i :i64] :bool
-  (if (association-covered? a) (if (< i 0) false (< i 2)) false))
+  (if (association-covered? a) (if (< i 0) false (< i 14)) false))
 
 (defn entry-field [a :string i :i64 f :string] [:option :string]
   (if (valid-entry? a i)
-    (if (= i 0)
+    (cond
+      (= i 0)
       (cond
         (string=? f "id") (option-some-of [:option :string] "spcr.founding-1990")
         (string=? f "title") (option-some-of [:option :string] "Svaz průmyslu České republiky founded in Ostrava on the initiative of 153 companies and organizations (Czech Wikipedia, corroborated by Wikidata Q12057458 inception statement)")
@@ -35,10 +39,11 @@
         (string=? f "kind") (option-some-of [:option :string] "governance-program")
         (string=? f "url") (option-some-of [:option :string] "https://cs.wikipedia.org/wiki/Svaz_pr%C5%AFmyslu_a_dopravy_%C4%8CR")
         (string=? f "url-provenance") (option-some-of [:option :string] "wikipedia-corroborated")
+        (string=? f "media-type") (option-some-of [:option :string] "text/html")
         (string=? f "established-date") (option-some-of [:option :string] "1990-05-05")
         (string=? f "retrieved-at") (option-some-of [:option :string] "2026-07-17")
-        :else (option-none-of [:option :string])
-        )
+        :else (option-none-of [:option :string]))
+      (= i 1)
       (cond
         (string=? f "id") (option-some-of [:option :string] "spcr.renaming-1994-add-transport")
         (string=? f "title") (option-some-of [:option :string] "General assembly approved renaming to Svaz průmyslu a dopravy České republiky (Confederation of Industry AND TRANSPORT), expanding scope (Czech Wikipedia)")
@@ -48,43 +53,324 @@
         (string=? f "kind") (option-some-of [:option :string] "governance-program")
         (string=? f "url") (option-some-of [:option :string] "https://cs.wikipedia.org/wiki/Svaz_pr%C5%AFmyslu_a_dopravy_%C4%8CR")
         (string=? f "url-provenance") (option-some-of [:option :string] "wikipedia-corroborated")
+        (string=? f "media-type") (option-some-of [:option :string] "text/html")
         (string=? f "established-date") (option-some-of [:option :string] "1994-03-17")
         (string=? f "retrieved-at") (option-some-of [:option :string] "2026-07-17")
-        :else (option-none-of [:option :string])
-        )
-      )
+        :else (option-none-of [:option :string]))
+      (= i 2)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.statutes-2026")
+        (string=? f "title") (option-some-of [:option :string] "Stanovy Svazu průmyslu a dopravy České republiky (Statutes) -- Article 19: approved by the general assembly on 13 May 2026, amending and replacing the Statutes adopted by the general assembly on 15 June 2021")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/stanovy-2026")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "last-revised-date") (option-some-of [:option :string] "2026-05-13")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 3)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.employers-organisation-legal-basis")
+        (string=? f "title") (option-some-of [:option :string] "Article 1(2) of the Statutes: SP ČR is an organisation of employers within the meaning of § 320 of Act No. 262/2006 Sb. (Labour Code), § 3025 of Act No. 89/2012 Sb. (Civil Code) and ILO Convention No. 87")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/stanovy-2026")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2026-05-13")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 4)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.tripartite-social-dialogue")
+        (string=? f "title") (option-some-of [:option :string] "Article 2(2)(a) of the Statutes: SP ČR asserts and protects its members' interests in the Council of Economic and Social Agreement of the Czech Republic (Rada hospodářské a sociální dohody ČR), the national tripartite body, alongside public authorities and trade unions")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/stanovy-2026")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2026-05-13")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 5)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.governing-bodies")
+        (string=? f "title") (option-some-of [:option :string] "Article 9 of the Statutes: the organs of SP ČR are the general assembly; the elected organs (board of directors, president and vice-presidents, supervisory board, conciliation committee); the advisory organs (membership base council, expert teams); and the executive organs (secretariat, director general). The term of office of elected organs is four years")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/stanovy-2026")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2026-05-13")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 6)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.ethics-code-2021")
+        (string=? f "title") (option-some-of [:option :string] "Etický kodex Svazu průmyslu a dopravy ČR (Code of Ethics) -- minimum standards of conduct binding on all members and on members of the elected organs, covering legal compliance, competition law, equal treatment and sustainable business; approved by the general assembly on 15 June 2021")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "self-regulatory-code")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/images/Eticky_kodex_SPCR_2021.pdf")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2021-06-15")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 7)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.payment-rules-2026")
+        (string=? f "title") (option-some-of [:option :string] "Platební řád (Payment Rules) -- annual membership contributions and partner and observer payments issued under Article 8(2) of the Statutes; approved by the general assembly on 13 May 2026 and effective from 14 May 2026")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/platebni-rad-2026-05-14")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2026-05-13")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 8)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.candidate-nomination-rules-2026")
+        (string=? f "title") (option-some-of [:option :string] "Pravidla pro návrh kandidátů do orgánů Svazu (Rules for Nominating Candidates to the Organs of the Confederation) -- approved by the general assembly on 13 May 2026; fixes the order of election and the eligibility condition, and the size of each organ: eighteen elected board members, seven vice-presidents, a five-member supervisory board and a three-member conciliation committee")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/pravidla-pro-navrh-kandidatu-2026")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2026-05-13")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 9)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.programme-declaration-2026")
+        (string=? f "title") (option-some-of [:option :string] "Programové prohlášení Svazu průmyslu a dopravy ČR na rok 2026 (Programme Declaration for 2026) -- approved by the general assembly on 9 December 2025; states the Vize Česko 2029 target (the Czech Republic in the EU TOP 10 by GDP per capita and the world TOP 20 of the Global Innovation Index) and the confederation's ten priorities")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/media/27070")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2025-12-09")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 10)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.trade-fair-committee-statutes")
+        (string=? f "title") (option-some-of [:option :string] "Stanovy Veletržního výboru při Svazu průmyslu a dopravy ČR (Statutes of the Trade Fair Committee) -- an expert team constituted under the Statutes to coordinate Czech industry's participation in domestic and foreign trade fairs; signed in Prague on 23 January 2013")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/media/25986")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "application/pdf")
+        (string=? f "established-date") (option-some-of [:option :string] "2013-01-23")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 11)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.predecessor-first-union-of-industrialists")
+        (string=? f "title") (option-some-of [:option :string] "SP ČR's own account of its lineage: in 2018 exactly one hundred years had passed since the founding of the first Český svaz průmyslníků (Czech Union of Industrialists), which the confederation names as its predecessor. The same page states SP ČR is a mandatory consultation body for many draft legal regulations. The year is all the page gives; no day or month is recorded here")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/kdo-jsme")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "text/html")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 12)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.eu-priorities-2024-2029")
+        (string=? f "title") (option-some-of [:option :string] "Priority českého byznysu v Evropské unii pro roky 2024-2029 (Priorities of Czech Business in the European Union) -- twelve steps for the competitiveness of Czech and European business, addressed to the European Parliament and Commission for their 2024-2029 term")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/prioritybyznysu")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "text/html")
+        (string=? f "last-revised-date") (option-some-of [:option :string] "2025-06-02")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      (= i 13)
+      (cond
+        (string=? f "id") (option-some-of [:option :string] "spcr.vision-cesko-2029")
+        (string=? f "title") (option-some-of [:option :string] "Česko v roce 2029: vize hospodářské politiky Svazu průmyslu (Czechia in 2029: the confederation's economic-policy vision) -- published 3 October 2024; sets targets including above-EU-average DESI scores and 25 % of Czech firms using artificial intelligence by 2029")
+        (string=? f "association") (option-some-of [:option :string] "spcr")
+        (string=? f "isic") (option-some-of [:option :string] "9411")
+        (string=? f "country") (option-some-of [:option :string] "CZE")
+        (string=? f "kind") (option-some-of [:option :string] "governance-program")
+        (string=? f "url") (option-some-of [:option :string] "https://www.spcr.cz/cesko2029")
+        (string=? f "url-provenance") (option-some-of [:option :string] "official-association-site")
+        (string=? f "media-type") (option-some-of [:option :string] "text/html")
+        (string=? f "established-date") (option-some-of [:option :string] "2024-10-03")
+        (string=? f "retrieved-at") (option-some-of [:option :string] "2026-09-09")
+        :else (option-none-of [:option :string]))
+      :else (option-none-of [:option :string]))
     (option-none-of [:option :string])))
 
 (defn topic-count [a :string i :i64] :i64
   (if (valid-entry? a i)
-    (if (= i 0) 1 (if (= i 1) 1 0))
+    (cond
+      (= i 0)
+      2
+      (= i 1)
+      2
+      (= i 2)
+      1
+      (= i 3)
+      2
+      (= i 4)
+      2
+      (= i 5)
+      1
+      (= i 6)
+      2
+      (= i 7)
+      2
+      (= i 8)
+      2
+      (= i 9)
+      2
+      (= i 10)
+      2
+      (= i 11)
+      2
+      (= i 12)
+      2
+      (= i 13)
+      1
+      :else 0)
     0))
 
 (defn topic [a :string i :i64 t :i64] [:option :string]
   (if (valid-entry? a i)
-    (if (= i 0)
-      (if (= t 0) (option-some-of [:option :string] "governance") (option-none-of [:option :string]))
-    (if (= i 1)
-      (if (= t 0) (option-some-of [:option :string] "governance") (option-none-of [:option :string]))
-    (option-none-of [:option :string])))
+  (cond
+    (= i 0)
+    (cond
+      (= t 0) (option-some-of [:option :string] "governance")
+      (= t 1) (option-some-of [:option :string] "history")
+      :else (option-none-of [:option :string]))
+    (= i 1)
+    (cond
+      (= t 0) (option-some-of [:option :string] "governance")
+      (= t 1) (option-some-of [:option :string] "history")
+      :else (option-none-of [:option :string]))
+    (= i 2)
+    (cond
+      (= t 0) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 3)
+    (cond
+      (= t 0) (option-some-of [:option :string] "governance")
+      (= t 1) (option-some-of [:option :string] "labour-law")
+      :else (option-none-of [:option :string]))
+    (= i 4)
+    (cond
+      (= t 0) (option-some-of [:option :string] "social-dialogue")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 5)
+    (cond
+      (= t 0) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 6)
+    (cond
+      (= t 0) (option-some-of [:option :string] "ethics")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 7)
+    (cond
+      (= t 0) (option-some-of [:option :string] "membership")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 8)
+    (cond
+      (= t 0) (option-some-of [:option :string] "elections")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 9)
+    (cond
+      (= t 0) (option-some-of [:option :string] "economic-policy")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 10)
+    (cond
+      (= t 0) (option-some-of [:option :string] "trade-promotion")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 11)
+    (cond
+      (= t 0) (option-some-of [:option :string] "history")
+      (= t 1) (option-some-of [:option :string] "governance")
+      :else (option-none-of [:option :string]))
+    (= i 12)
+    (cond
+      (= t 0) (option-some-of [:option :string] "economic-policy")
+      (= t 1) (option-some-of [:option :string] "eu-affairs")
+      :else (option-none-of [:option :string]))
+    (= i 13)
+    (cond
+      (= t 0) (option-some-of [:option :string] "economic-policy")
+      :else (option-none-of [:option :string]))
+    :else (option-none-of [:option :string]))
     (option-none-of [:option :string])))
 
 (defn by-topic-count [a :string candidate :string] :i64
   (if (association-covered? a)
-    (if (string=? candidate "governance") 2 0)
+    (cond
+      (string=? candidate "governance") 12
+      (string=? candidate "history") 3
+      (string=? candidate "labour-law") 1
+      (string=? candidate "social-dialogue") 1
+      (string=? candidate "ethics") 1
+      (string=? candidate "membership") 1
+      (string=? candidate "elections") 1
+      (string=? candidate "economic-policy") 3
+      (string=? candidate "trade-promotion") 1
+      (string=? candidate "eu-affairs") 1
+      :else 0)
     0))
 
 (defn by-topic-id [a :string candidate :string i :i64] [:option :string]
   (if (association-covered? a)
     (if (= i 0)
-      (if (string=? candidate "governance") (entry-field a 0 "id") (option-none-of [:option :string]))
+      (cond
+        (string=? candidate "governance") (option-some-of [:option :string] "spcr.founding-1990")
+        (string=? candidate "history") (option-some-of [:option :string] "spcr.founding-1990")
+        (string=? candidate "labour-law") (option-some-of [:option :string] "spcr.employers-organisation-legal-basis")
+        (string=? candidate "social-dialogue") (option-some-of [:option :string] "spcr.tripartite-social-dialogue")
+        (string=? candidate "ethics") (option-some-of [:option :string] "spcr.ethics-code-2021")
+        (string=? candidate "membership") (option-some-of [:option :string] "spcr.payment-rules-2026")
+        (string=? candidate "elections") (option-some-of [:option :string] "spcr.candidate-nomination-rules-2026")
+        (string=? candidate "economic-policy") (option-some-of [:option :string] "spcr.programme-declaration-2026")
+        (string=? candidate "trade-promotion") (option-some-of [:option :string] "spcr.trade-fair-committee-statutes")
+        (string=? candidate "eu-affairs") (option-some-of [:option :string] "spcr.eu-priorities-2024-2029")
+        :else (option-none-of [:option :string]))
       (option-none-of [:option :string]))
     (option-none-of [:option :string])))
 
 (defn coverage-note [a :string] [:option :string]
   (if (association-covered? a)
-    (option-some-of [:option :string]
-      "cloud-itonami-assoc-9411-cze-spcr Wave 0 (ADR-2607141700): 2 spcr entries seeded with an official citation. Extend the sovereign catalog; never fabricate a rule id/url.")
+    (option-some-of [:option :string] "cloud-itonami-assoc-9411-cze-spcr (ADR-2607141700): 14 spcr entries, each with a citation that was fetched. Extend the sovereign catalog; never fabricate a rule id/url.")
     (option-none-of [:option :string])))
 
 (defn main [] :i64 0)
