@@ -12,7 +12,8 @@
   by position, so the port chose the order the data file writes; the assertion
   below compares against that written order rather than against `seq` on a set,
   which is not stable to rely on."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [clojure.edn :as edn]
+            [clojure.test :refer [deftest is testing]]
             [association.facts :as facts]
             [kotoba.compiler.core :as compiler]
             [kotoba.kir :as ir]))
@@ -24,22 +25,48 @@
 
 (def ^:private slug "spcr")
 (def ^:private fields
+  ;; `media-type` and `last-revised-date` were absent from this list until
+  ;; 2026-09-09, so the port could omit either for an entry that has one and
+  ;; nothing would say so. Measured on 2026-09-09, both directions: dropping
+  ;; `media-type` from the generator and regenerating fails four assertions
+  ;; here ("text/html" vs nil) under this list, and passes -- 18 tests, 412
+  ;; assertions, 0 failures -- under the old one, with the same broken port.
   ["id" "title" "association" "isic" "country" "kind" "url" "url-provenance"
-   "established-date" "retrieved-at"])
+   "media-type" "established-date" "last-revised-date" "retrieved-at"])
 (def ^:private kw->field
   {"id" :association-rule/id "title" :association-rule/title
    "association" :association-rule/association "isic" :association-rule/isic
    "country" :association-rule/country "kind" :association-rule/kind
    "url" :association-rule/url "url-provenance" :association-rule/url-provenance
+   "media-type" :association-rule/media-type
    "established-date" :association-rule/established-date
+   "last-revised-date" :association-rule/last-revised-date
    "retrieved-at" :association-rule/retrieved-at})
 (def ^:private entries (vec (facts/spec-basis slug)))
-(def ^:private topic-order [["governance"] ["governance"]])
+(def ^:private topic-order
+  ;; The written order, read from the file the port is generated from.
+  ;;
+  ;; It was a hand-kept literal until 2026-09-09. Measured before changing it:
+  ;; a SHORT hand-kept list does not silently pass -- the count assertion in
+  ;; `the-fixture-reads-a-real-catalog` catches it (1 failure), and a list of
+  ;; the right length with wrong contents is caught by the set comparison
+  ;; below. So this is not a hole being closed; it is a maintenance step being
+  ;; removed. The list had to be edited in step with the catalog, and the
+  ;; failure it produced when someone forgot named the fixture rather than the
+  ;; catalog, which is the wrong place to start reading.
+  (mapv #(mapv name (:association-rule/topic %))
+        (edn/read-string (slurp "data/datascript-tx.edn"))))
 
 (deftest the-fixture-reads-a-real-catalog
   ;; An empty catalog compares equal to an empty port.
   (is (pos? (count entries)))
-  (is (= (count entries) (count topic-order))))
+  (is (= (count entries) (count topic-order)))
+  ;; And every field this port claims to answer must be exercised by at least
+  ;; one entry, or the comparison for that field is vacuous.
+  (doseq [f fields]
+    (testing f
+      (is (some #(some? (get % (kw->field f))) entries)
+          "no entry carries this field, so comparing it proves nothing"))))
 
 (deftest every-field-of-every-entry-is-transcribed
   (is (= (count entries) (call 'entry-count slug)))
