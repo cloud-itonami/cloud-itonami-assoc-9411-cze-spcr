@@ -6,7 +6,7 @@
 ;; hermetic on purpose -- so the claim is only ever as good as the last time
 ;; someone looked. This is how you look.
 ;;
-;;   nbb scripts/verify_citations.cljs
+;;   kbb --backend sci scripts/verify_citations.cljk
 ;;
 ;; Exit 0 every URL answered 2xx with the media type the catalog records.
 ;;      1 at least one did not (the line says which, and what came back).
