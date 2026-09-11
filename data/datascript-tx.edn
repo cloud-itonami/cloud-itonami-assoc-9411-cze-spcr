@@ -18,7 +18,7 @@
 ;; `:media-type` is what the URL actually served when it was last checked.
 ;; spcr.cz serves several PDFs from extension-less paths (`/stanovy-2026` is a
 ;; PDF), so it cannot be inferred from the URL -- it is recorded per entry and
-;; `nbb scripts/verify_citations.cljs` compares it against the live response.
+;; `kbb --backend sci scripts/verify_citations.cljk` compares it against the live response.
 ;;
 ;; Every :association-rule/url was fetched and answered 200 with the media type
 ;; recorded here. A rule that is not in this file has NO spec-basis; extend it

@@ -20,7 +20,7 @@
     indistinguishable from a fact.
 
   What none of this can check is whether the URL still resolves -- the suite is
-  hermetic on purpose. `nbb scripts/verify_citations.cljs` is the check that
+  hermetic on purpose. `kbb --backend sci scripts/verify_citations.cljk` is the check that
   goes and looks."
   (:require [clojure.edn :as edn]
             [kotoba.lang.text :as str]

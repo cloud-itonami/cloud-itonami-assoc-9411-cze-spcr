@@ -47,7 +47,7 @@ the host the URL is actually on.
 The suite is hermetic, so it cannot know whether a URL still resolves:
 
 ```
-nbb scripts/verify_citations.cljs     # 0 all ok / 1 something rotted / 2 REFUSED
+kbb --backend sci scripts/verify_citations.cljk     # 0 all ok / 1 something rotted / 2 REFUSED
 ```
 
 It fetches each **distinct** URL once (four entries cite four articles
@@ -94,8 +94,8 @@ fabricate one.
 - `src/association_facts.kotoba` — **generated**; do not edit by hand.
 
 ```
-nbb scripts/gen_association_facts_kotoba.cljs           # write
-nbb scripts/gen_association_facts_kotoba.cljs --check   # exit 1 if stale
+kbb --backend sci scripts/gen_association_facts_kotoba.cljk           # write
+kbb --backend sci scripts/gen_association_facts_kotoba.cljk --check   # exit 1 if stale
 ```
 
 - `schema/association-rule.edn` — DataScript schema. Query this

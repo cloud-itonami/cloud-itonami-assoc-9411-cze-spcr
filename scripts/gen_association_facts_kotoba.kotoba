@@ -8,8 +8,8 @@
 ;; generated and `test/association_facts_kotoba_parity_test.clj` compares every
 ;; one of them back against the .cljc.
 ;;
-;;   nbb scripts/gen_association_facts_kotoba.cljs           # write
-;;   nbb scripts/gen_association_facts_kotoba.cljs --check   # exit 1 if stale
+;;   kbb --backend sci scripts/gen_association_facts_kotoba.cljk           # write
+;;   kbb --backend sci scripts/gen_association_facts_kotoba.cljk --check   # exit 1 if stale
 ;;
 ;; --check is the useful mode in CI: it fails when someone edits the catalog and
 ;; forgets to regenerate, which is the drift the parity test would otherwise
@@ -203,7 +203,7 @@
         (println "OK" out-path "is up to date with" tx-path
                  (str "(" (count entries) " entries)"))
         (do (println "STALE:" out-path "does not match" tx-path
-                     "- run: nbb scripts/gen_association_facts_kotoba.cljs")
+                     "- run: kbb --backend sci scripts/gen_association_facts_kotoba.cljk")
             (js/process.exit 1))))
     (do (fs/writeFileSync out-path out)
         (println "wrote" out-path (str "(" (count entries) " entries, "
