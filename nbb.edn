@@ -4,4 +4,7 @@
 ;;
 ;; :paths is COPIED from deps.edn, not chosen here.
 {:paths ["src"]
- :deps {io.github.kotoba-lang/text {:git/sha "2ee6dce2ca944decd001f9378868dd703fc3e741"}}}
+ :deps {io.github.kotoba-lang/text
+        {:git/url "https://github.com/kotoba-lang/kotoba.git"
+         :git/sha "4bf68e1a1b205674c70f386d59e430801fae3572"
+         :deps/root "lib/kotoba.text"}}}
